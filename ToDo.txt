@@ -1,0 +1,27 @@
+Testing:
+- most importantly: Loading and saving files
+- unit tests for each class (worth the effort or not?)
+
+known bugs:
+- loading files might produce errors due to syntax that was unaccounted for. further testing is needed.
+- Tables that utilize TextFieldController.setLink() have inconsistent/confusing behaviour
+
+nice-to-haves:
+- more information for some parts of the UI
+- TabEmergencies: it should not be possible to choose diseases that are set to non-existant
+- custom campaign support
+- save the last filepath into the executable instead of a separate file?
+- block system access to current file (is this necessary? how is it handled by other apps?)
+- make object cost and room cost editable
+- illness ratios (how much does each illness appear in relation to others; if supported by the game)
+- other missing parameters (although maybe not all should be added to avoid confusion)
+- TabDiseases: if disease is set to non-existant, set the other fields to uneditable.
+- textfields: option to reset to default value
+- give warning when there is no way a disease can be cured? (also has to take into account sufficient diagnosis and MaxDiagDiff)
+- should only ask for saving changes on exit if changes have been made.
+- show current file on the window title
+- save function (instead of just "save as")
+- remembering language settings on next startup
+- update readme with how to add new parameters and how to edit translations
+- Gui could be split into GuiFrame, GuiReloader and GuiConfig
+- Table could be refactored, using it feel more complicated than it needs to be.

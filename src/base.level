@@ -1,0 +1,414 @@
+Copyright (c) 2010 Edvin "Lego3" Linge
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Only lines beginning with % or # as explained below will be considered by the game.
+
+Each line beginning with a %-sign are directives to use when loading the game, such as what
+the level is called and where to find the map file. Available commands:
+- Name: What the level should be called (within quotes)
+- LevelFile: The name of the binary map file to load. First the Levels directory of the 
+  original game will be searched, and then the Levels directory of CorsixTH.
+
+
+---------------------- General Information -------------------------
+%Name = "Example Town"
+%LevelFile = "Example.map"
+
+Note that the below introduction text at the moment must reside on a single line within this file!
+%LevelBriefing = "No briefing yet!"
+
+Town properties
+InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
+300 means 3 %
+#town.StartCash.InterestRate 40000 100
+
+#gbv.LandCostPerTile 25 Cost to buy a single map square
+#gbv.RemoveRatHoleChance	3000	1-10000 Lower removes ratholes faster
+#gbv.MayorLaunch			150	Frequency of Mayor visits. Lower is more frequent.
+
+#gbv.EpidemicFine			2000	If epidemic coverup fails - how much per person you are fined max 20000
+#gbv.EpidemicCompLo		1000	If an epidemic coverup succeeds how much compensation is received - lo value 
+#gbv.EpidemicCompHi		15000	If an epidemic coverup succeeds how much compensation is received - hi value max 20000
+-- How many patients still infected cause a reputation loss as well as a fine if less than EpidemicEvacMinimum then ignored
+#gbv.EpidemicRepLossMinimum 5
+-- How many patients still infected and not-cured cause the hospital to be evacuated
+#gbv.EpidemicEvacMinimum 10
+--How many epidemics can exists at the same time - both active and quietly in the background
+#gbv.EpidemicConcurrentLimit 1
+#gbv.ReduceContMonths 14
+#gbv.ReduceContPeepCount 20
+#gbv.ReduceContRate 0
+
+-------------------------- Research --------------------------------
+#gbv.StartCost 100
+#gbv.MinDrugCost 50
+#gbv.StartRating 100 When a drug is researched, what effectiveness does it have
+#gbv.DrugImproveRate 5
+#gbv.RschImproveCostPercent 10 How many percent of the original research points that are required to improve the machine.
+#gbv.RschImproveIncrementPercent 10 How many additional percentage points are added to the above value for each upgrade.
+#gbv.MaxObjectStrength 20 Maximum strength value an object can be improved to (by research)
+#gbv.ResearchIncrement 2 Increase object strength by this amount when researching
+#gbv.AutopsyRschPercent 33 % of research completed for an autopsy
+#gbv.AutopsyRepHitPercent 25 % rep hit for discovered autopsy
+#gbv.ResearchPointsDivisor 5 Divides research input to get the amount of research points. must be > 0
+
+------------------------- Patients ----------------------------------
+
+#gbv.ContagiousSpreadFactor	25	0-100 Higher equals more chance of spreading.
+#gbv.HoldVisualMonths		2	Hold all visual illnesses until x months. 0 never hold
+#gbv.HoldVisualPeepCount	6	Hold all visual illnesses until x peeps have arrived. 0 never hold
+#gbv.LitterDrop			25	Peep drops litter when LitterCheck reaches this value
+#gbv.LeaveMax			150	Peep leaves when LeavingCount reaches this value
+#gbv.Happy				75	Determines that a person is happy
+#gbv.Unhappy			50	Determines that peeps are unhappy (one added to LeavingCount)
+#gbv.VeryUnhappy			25	Determines that peep is very unhappy
+#gbv.VomitLimit			50	Person pukes at this level
+#gbv.VacCost			50	Cost per vaccination
+
+
+---------------------- Staff Configuration -------------------------
+
+How much the skill of the doctor adds to the salary. skill * 1000 / divisor
+#gbv.SalaryAbilityDivisor 10
+
+#gbv.CrackUpTired			800	Staff Tiredness Above this - could crack up
+#gbv.RecoveryFactor		450	Reduces effect of resting based on tiredness ie (recover_value*RecoveryFactor)/Tiredness
+
+The minimum salary for each staff type
+#staff[0].MinSalary 60 Nurse
+#staff[1].MinSalary 75 Doctor
+#staff[2].MinSalary 25 Handyman
+#staff[3].MinSalary 20 Receptionist
+
+Salary modifiers for different doctor attributes
+#gbv.SalaryAdd[3] -30 Junior
+#gbv.SalaryAdd[4] 30 Doctor
+#gbv.SalaryAdd[5] 40 Surgeon
+#gbv.SalaryAdd[6] 30 Psychiatrist
+#gbv.SalaryAdd[7] 100 Consultant
+#gbv.SalaryAdd[8] 20 Researcher
+
+Each entry states how many staff members of each category are available a given month. The number of entries is not fixed.
+| A list | Month it gets active (start at 0) | Each group |
+#staff_levels[0].Month.Nurses.Doctors.Handymen.Receptionists.ShrkRate.SurgRate.RschRate.ConsRate.JrRate 0 8 8 3 2 10 10 10 10 5
+
+#gbv.TrainingRate         40
+#gbv.AbilityThreshold[0]  75 Surgeon
+#gbv.AbilityThreshold[1]  60 Psychiatrist
+#gbv.AbilityThreshold[2]  45 Researcher
+#gbv.TrainingValue[0]     10 Projector
+#gbv.TrainingValue[1]     15 Skeleton
+#gbv.TrainingValue[2]     20 Bookcase
+
+-------------------- Disease Configuration -------------------------
+
+The following table contains all diagnoses and treatments that shows up in the drug casebook
+in the game. Known specifies whether it should show up from the beginning of the level and
+RschReqd how much research is required to discover the treatment room for the disease, MaxDiagDiff is how hard it is to diagnose (don't apply to diag rooms).
+#expertise[1].StartPrice.ContRate.Known.RschReqd				100		0	1	0			GENERAL_PRACTICE
+#expertise[2].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	850		0	0	40000	700	BLOATY_HEAD
+#expertise[3].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1150	0	0	40000	250	HAIRYITUS
+#expertise[4].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1600	0	0	60000	250	ELVIS
+#expertise[5].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1400	0	0	60000	250	INVIS
+#expertise[6].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1800	0	0	60000	250	RADIATION
+#expertise[7].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	900		0	0	40000	250	SLACK_TONGUE
+#expertise[8].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	2000	0	0	60000	350	ALIEN
+#expertise[9].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	450		0	0	20000	250	BROKEN_BONES
+#expertise[10].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	950		0	0	40000	250	BALDNESS
+#expertise[11].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	700		0	0	40000	700	DISCRETE_ITCHING
+#expertise[12].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1000	0	0	40000	1000	JELLYITUS
+#expertise[13].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	750		0	0	40000	700	SLEEPING_ILLNESS
+#expertise[14].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	0		0	0	5000	400	PREGNANT
+#expertise[15].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	800		0	0	40000	350	TRANSPARENCY
+#expertise[16].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	300		0	0	20000	350	UNCOMMON_COLD
+#expertise[17].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1300	0	0	60000	1000	BROKEN_WIND
+#expertise[18].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1100	0	0	20000	350	SPARE_RIBS
+#expertise[19].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1050	0	0	20000	700	KIDNEY_BEANS
+#expertise[20].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1900	0	0	20000	700	BROKEN_HEART
+#expertise[21].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1600	0	0	20000	700	RUPTURED_NODULES
+#expertise[22].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	800		0	0	40000	350	MULTIPLE_TV_PERSONALITIES
+#expertise[23].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1500	0	0	60000	350	INFECTIOUS_LAUGHTER
+#expertise[24].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	800		0	0	40000	700	CORRUGATED_ANKLES
+#expertise[25].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	800		0	0	40000	700	CHRONIC_NOSEHAIR
+#expertise[26].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	550		0	0	40000	700	3RD_DEGREE_SIDEBURNS
+#expertise[27].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	800		0	0	40000	350	FAKE_BLOOD
+#expertise[28].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	650		0	0	40000	700	GASTRIC_EJECTIONS
+#expertise[29].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	400		0	0	20000	1000	THE_SQUITS
+#expertise[30].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1700	0	0	20000	700	IRON_LUNGS
+#expertise[31].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	600		0	0	40000	1000	SWEATY_PALMS
+#expertise[32].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	400		0	0	20000	700	HEAPED_PILES
+#expertise[33].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	350		0	0	20000	1000	GUT_ROT
+#expertise[34].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	1600	0	0	20000	700	GOLF_STONES
+#expertise[35].StartPrice.ContRate.Known.RschReqd.MaxDiagDiff	500		0	0	20000	700	UNEXPECTED_SWELLING
+#expertise[36].StartPrice.ContRate.Known.RschReqd			300			0	0	40000		I_D_SCANNER             DIAGNOSIS
+#expertise[37].StartPrice.ContRate.Known.RschReqd			250			0	0	50000		I_D_BLOOD_MACHINE       DIAGNOSIS
+#expertise[38].StartPrice.ContRate.Known.RschReqd			150			0	0	20000		I_D_CARDIO              DIAGNOSIS
+#expertise[39].StartPrice.ContRate.Known.RschReqd			200			0	0	30000		I_D_XRAY                DIAGNOSIS
+#expertise[40].StartPrice.ContRate.Known.RschReqd			250			0	0	60000		I_D_ULTRASCAN           DIAGNOSIS
+#expertise[41].StartPrice.ContRate.Known.RschReqd			150			0	0	20000		I_D_STANDARD            DIAGNOSIS
+#expertise[42].StartPrice.ContRate.Known.RschReqd			100			0	0	20000		I_D_WARD                DIAGNOSIS
+#expertise[43].StartPrice.ContRate.Known.RschReqd			200			0	0	20000		I_D_SHRINK              DIAGNOSIS
+
+| Diseases available | Value property to be determined | Comment
+#visuals[0]  0 I_BLOATY_HEAD
+#visuals[1]  0 I_HAIRYITUS
+#visuals[2]  0 I_ELVIS
+#visuals[3]  0 I_INVIS
+#visuals[4]  0 I_RADIATION
+#visuals[5]  0 I_SLACK_TONGUE
+#visuals[6]  0 I_ALIEN
+#visuals[7]  0 I_BROKEN_BONES
+#visuals[8]  0 I_BALDNESS
+#visuals[9]  0 I_DISCRETE_ITCHING
+#visuals[10] 0 I_JELLYITUS
+#visuals[11] 0 I_SLEEPING_ILLNESS
+#visuals[12] 0 I_PREGNANT
+#visuals[13] 0 I_TRANSPARENCY
+#non_visuals[0] 0 I_UNCOMMON_COLD
+#non_visuals[1] 0 I_BROKEN_WIND
+#non_visuals[2] 0 I_SPARE_RIBS
+#non_visuals[3] 0 I_KIDNEY_BEANS
+#non_visuals[4] 0 I_BROKEN_HEART
+#non_visuals[5] 0 I_RUPTURED_NODULES
+#non_visuals[6] 0 I_MULTIPLE_TV_PERSONALITIES
+#non_visuals[7] 0 I_INFECTIOUS_LAUGHTER
+#non_visuals[8] 0 I_CORRUGATED_ANKLES
+#non_visuals[9] 0 I_CHRONIC_NOSEHAIR
+#non_visuals[10] 0 I_3RD_DEGREE_SIDEBURNS
+#non_visuals[11] 0 I_FAKE_BLOOD
+#non_visuals[12] 0 I_GASTRIC_EJECTIONS
+#non_visuals[13] 0 I_THE_SQUITS
+#non_visuals[14] 0 I_IRON_LUNGS
+#non_visuals[15] 0 I_SWEATY_PALMS
+#non_visuals[16] 0 I_HEAPED_PILES
+#non_visuals[17] 0 I_GUT_ROT
+#non_visuals[18] 0 I_GOLF_STONES
+#non_visuals[19] 0 I_UNEXPECTED_SWELLING
+
+
+#visuals_available[0]		0	I_BLOATY_HEAD
+#visuals_available[1]		12	I_HAIRYITUS
+#visuals_available[2]		3	I_ELVIS
+#visuals_available[3]		12	I_INVIS
+#visuals_available[4]		18	I_RADIATION
+#visuals_available[5]		6	I_SLACK_TONGUE
+#visuals_available[6]		0	I_ALIEN
+#visuals_available[7]		6	I_BROKEN_BONES
+#visuals_available[8]		12	I_BALDNESS
+#visuals_available[9]		0	I_DISCRETE_ITCHING
+#visuals_available[10]		18	I_JELLYITUS
+#visuals_available[11]		0	I_SLEEPING_ILLNESS
+#visuals_available[12]		0	I_PREGNANT
+#visuals_available[13]		6	I_TRANSPARENCY
+
+
+---------------------- Objects & Rooms -------------------------
+
+| Objects available | Available from the start | Strength | Available for this level | Comment
+#objects[1].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 100	1 10 1 0 Desk
+#objects[2].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 100	1 10 1 0 Cabinet
+#objects[3].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 0		1 10 1 0
+#objects[4].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 40	1 10 1 0 Bench
+#objects[5].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 60	1 10 1 0 Table
+#objects[6].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 20	1 10 1 0 Chair
+#objects[7].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 500	1 10 1 0 Drinks
+#objects[8].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 200	1 10 1 5000 Bed
+#objects[9].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 2500	0 8 0 40000 Inflator Machine
+#objects[10].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 150	1 10 1 0 Snooker Table
+#objects[11].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 150	1 10 1 0 Reception
+#objects[12].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5	1 10 1 0 Build Room Tressle Table
+#objects[13].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 1000	0 13 0 20000 Cardiogram
+#objects[14].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5000	0 12 0 50000 Scanner
+#objects[15].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 3000	1 10 1 0 Scanner Console
+#objects[16].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 30	1 10 1 0 Screen
+#objects[17].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5000	1 10 1 0 Jukebox
+#objects[18].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 100	1 10 1 5000 Psychiatry Couch
+#objects[19].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 150	1 10 1 0 Sofa
+#objects[20].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 250	1 10 1 5000 General Diagnosis Trolley
+#objects[21].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 50	1 10 1 0 TV set
+#objects[22].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 6000	0 9 0 80000 Ultrascan
+#objects[23].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 10000 0 7 0 100000 DNA Restorer
+#objects[24].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 2000	0 11 0 15000 Cast Remover
+#objects[25].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 1000	0 8 0 30000 Hair restorer
+#objects[26].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 1500	0 10 0 20000 Slicer for slack tongues
+#objects[27].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 4000	0 12 0 30000 X-Ray
+#objects[28].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 2000	1 10 1 0 Radiation Shield
+#objects[29].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 500	1 10 1 0 X-Ray Viewer
+#objects[30].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5000	0 12 0 20000 Operating Table
+#objects[31].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 2000	1 10 1 0 Lamp
+#objects[32].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 30	1 10 1 0 Bathroom Sink
+#objects[33].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 50	1 10 1 0 Op Sink 1
+#objects[34].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 50	1 10 1 0 Op Sink 2
+#objects[35].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 200	1 10 1 0 Surgeon Screen
+#objects[36].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 50	1 10 1 0 Lecture Chair
+#objects[37].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 100	0 10 0 10000 Projector
+#objects[38].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 200	1 10 1 0 Bed Screen Open
+#objects[39].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 1000	1 10 1 5000 Pharmacy Cabinet
+#objects[40].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5000	0 10 0 30000 Research Computer
+#objects[41].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 10000 0 10 0 60000 Chemical Mixer 
+#objects[42].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 3000	0 10 0 60000 Blood Machine
+#objects[43].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 25	1 10 1 0 Fire Extinguisher
+#objects[44].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 20	1 10 1 0 Radiator
+#objects[45].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5	1 10 1 0 Plant
+#objects[46].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 3500	0 8 0 70000 Electrolysis Machine
+#objects[47].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 6500	0 7 0 90000 Jellyitus Moulding Machine
+#objects[48].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 0	1 10 1 0 Gates to Hell
+#objects[49].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 200	1 10 1 0 Bed Screen Closed
+#objects[50].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 5	1 10 1 0 Bin
+#objects[51].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 300	1 10 1 0 Toilet
+#objects[52].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 0	1 10 1 0
+#objects[53].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 0	1 10 1 0
+#objects[54].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 6500	0 10 0 60000 Decontamination Shower
+#objects[55].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 4000	1 10 1 0 Autopsy Research Machine
+#objects[56].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 350	1 10 1 0 Bookcase
+#objects[57].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 200	0 10 0 10000 Video Game
+#objects[58].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 0	1 10 1 0
+#objects[59].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 0	1 10 1 0
+#objects[60].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 450	1 10 1 0 Skeleton
+#objects[61].StartCost.StartAvail.StartStrength.AvailableForLevel.RschReqd 100	1 10 1 0 Comfy Chair
+
+
+#rooms[7].Cost		2280		GP_OFFICE
+#rooms[8].Cost		2270		PSYCHO
+#rooms[9].Cost		1700		WARD
+#rooms[10].Cost		2250		OP_THEATRE
+#rooms[11].Cost		500		PHARMACY
+#rooms[12].Cost		470		CARDIO
+#rooms[13].Cost		3970		SCANNER
+#rooms[14].Cost		2000		ULTRASCAN
+#rooms[15].Cost		3000		BLOOD_MACHINE
+#rooms[16].Cost		2000		XRAY
+#rooms[17].Cost		1500		INFLATOR
+#rooms[18].Cost		7000		ALIEN
+#rooms[19].Cost		500		HAIR_RESTORE
+#rooms[20].Cost		1500		SLACK_TONGUE
+#rooms[21].Cost		500		FRACTURE
+#rooms[22].Cost		1850		TRAINING
+#rooms[23].Cost		500		ELECTRO
+#rooms[24].Cost		4500		JELLY_VAT
+#rooms[25].Cost		1350		STAFF
+#rooms[26].Cost		5		TV
+#rooms[27].Cost		720		GENERAL_DIAG
+#rooms[28].Cost		800		RESEARCH
+#rooms[29].Cost		1170		TOILETS
+#rooms[30].Cost		5500		DECON_SHOWER
+
+
+-------------------------- Population ---------------------------
+#popn[0].Month.Change 0 4
+#popn[1].Month.Change 1 1
+
+
+---------------------- Awards and Trophies -------------------------
+
+Trophy win conditions
+#awards_trophies.RatKillsAbsolute		25	Kill more than this number of rats in a year to win this award MIN 0 MAX 255
+#awards_trophies.CansofCoke			100	Sell more than this number of cans to win the award MIN 0 MAX 255
+#awards_trophies.Reputation			400	If player's reputation is >x all through the year then win trophy MIN 0 MAX 1000
+#awards_trophies.Plant				80	Percentage - keep you plants 90% or more watered MIN 0 MAX 100
+#awards_trophies.TrophyStaffHappiness	85	Percentage - keep mean staff happiness >x throughout the year to win the trophy MIN 0 MAX 100
+#awards_trophies.RatKillsPercentage		11	Percentage - Rats shot:Rats killed - only valid if player kills at least half the number of rats needed to win the other rats trophy MIN 0 MAX 100
+
+Trophy win bonuses
+#awards_trophies.RatKillsAbsoluteBonus		5	Bonus - MIN 0 MAX 255 (REP BONUS) REP BONUSES ARE NOW PERCENTAGES
+#awards_trophies.CansofCokeBonus			1000	Bonus - MIN 0 MAX 65535 (MONEY BONUS)
+#awards_trophies.TrophyReputationBonus		2000	Bonus - MIN 0 MAX 65535 (MONEY BONUS)
+#awards_trophies.PlantBonus				5	Bonus - MIN 0 MAX 255 (REP BONUS)
+#awards_trophies.TrophyStaffHappinessBonus	5	Bonus - MIN 0 MAX 255 (REP BONUS)
+#awards_trophies.RatKillsPercentageBonus	5000		Bonus - MIN 0 MAX 65535 (MONEY BONUS)
+#awards_trophies.TrophyDeathBonus			10000	Bonus to money for NO DEATHS in the year (0-65535) (MONEY BONUS)
+#awards_trophies.TrophyCuresBonus			6000	Bonus to money for approximately 100% Cure Rate in the year (0-65535) (MONEY BONUS)
+#awards_trophies.TrophyMayorBonus			5	Bonus to reputation for good mayor visits (0-255) (REP BONUS)
+
+Award win criteria
+#awards_trophies.CuresAward				50	>x to win the award			MIN 0 MAX 255
+#awards_trophies.CuresPoor				10	<x to win this award 			MIN 0 MAX 255
+#awards_trophies.DeathsAward				10	<x to win this award 			MIN 0 MAX 255
+#awards_trophies.DeathsPoor				25	>x to win the award			MIN 0 MAX 255
+#awards_trophies.PopulationPercentageAward	50	>x Percentage - to win the award	MIN 0 MAX 100
+#awards_trophies.PopulationPercentagePoor		15	<x Percentage - to win the award	MIN 0 MAX 100
+#awards_trophies.CuresVDeathsAward			5	>x to win the award			MIN 0 MAX 100
+#awards_trophies.CuresVDeathsPoor			1	<x to win this award 			MIN 0 MAX 100
+#awards_trophies.ReputationAward			500	>x to win the award			MIN 0 MAX 1000
+#awards_trophies.ReputationPoor			200	<x to win the award			MIN 0 MAX 1000
+#awards_trophies.HospValueAward			150000	>x to win the award		MIN 0 MAX 2000000
+#awards_trophies.HospValuePoor			50000	<x to win the award			MIN 0 MAX 2000000
+#awards_trophies.CleanlinessAward			5	<x Percentage - to win the award	MIN 0 MAX 100 - low is good (ie low amount of litter per square)
+#awards_trophies.CleanlinessPoor			40	>x Percentage - to win the award	MIN 0 MAX 100 - high is bad (ie high amount of litter per square)
+#awards_trophies.EmergencyAward			90	>x Percentage - to win the award	MIN 0 MAX 100 - percentage of peeps saved in emergencies - at least two emergencies per year  to qualify
+#awards_trophies.EmergencyPoor			50	<x Percentage - to win the award	MIN 0 MAX 100
+#awards_trophies.StaffHappinessAward		75	>x Percentage - to win the award	MIN 0 MAX 100 - staff mean happiness thoughout the year
+#awards_trophies.StaffHappinessPoor			25	<x Percentage - to win the award	MIN 0 MAX 100
+#awards_trophies.PeepHappinessAward			75	>x Percentage - to win the award	MIN 0 MAX 100 - peeps mean happiness thoughout the year
+#awards_trophies.PeepHappinessPoor			25 	<x Percentage - to win the award	MIN 0 MAX 100
+#awards_trophies.WaitingTimesAward			25	>x Percentage - to win the award	MIN 0 MAX 100 - percentage of BAL_LC_LEAVE - gbv.LeaveMax - high is bad, low is good
+#awards_trophies.WaitingTimesPoor			75 	<x Percentage - to win the award	MIN 0 MAX 100
+#awards_trophies.WellKeptTechAward			20	Percentages - low is well looked after, high is bad
+#awards_trophies.WellKeptTechPoor			70
+
+Award win bonuses or penalties
+
+#awards_trophies.CuresBonus				2000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.CuresPenalty				-3000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.DeathsBonus				3000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.DeathsPenalty			-5000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.PopulationPercentageBonus	4	MIN -127 MAX +127 - REP - REP BONUSES ARE NOW PERCENTAGES
+#awards_trophies.PopulationPercentagePenalty	-5	MIN -127 MAX +127 - REP
+#awards_trophies.CuresVDeathsBonus			4000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.CuresVDeathsPenalty		-4000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.AwardReputationBonus		2000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.AwardReputationPenalty		-3000	MIN -32000 MAX +32000 - MONEY
+#awards_trophies.HospValueBonus			3	MIN -127 MAX +127 - REP
+#awards_trophies.HospValuePenalty			-6	MIN -127 MAX +127 - REP
+#awards_trophies.CleanlinessBonus			6	MIN -127 MAX +127 - REP
+#awards_trophies.CleanlinessPenalty			-12	MIN -127 MAX +127 - REP
+#awards_trophies.EmergencyBonus			7	MIN -127 MAX +127 - REP
+#awards_trophies.EmergencyPenalty			-11	MIN -127 MAX +127 - REP
+#awards_trophies.AwardStaffHappinessBonus		4	MIN -127 MAX +127 - REP
+#awards_trophies.AwardStaffHappinessPenalty	-10	MIN -127 MAX +127 - REP
+#awards_trophies.PeepHappinessBonus			4	MIN -127 MAX +127 - REP
+#awards_trophies.PeepHappinessPenalty		-9	MIN -127 MAX +127 - REP
+#awards_trophies.WaitingTimesBonus			2	MIN -127 MAX +127 - REP
+#awards_trophies.WaitingTimesPenalty		-6	MIN -127 MAX +127 - REP
+#awards_trophies.WellKeptTechBonus			7	MIN -127 MAX +127 - REP
+#awards_trophies.WellKeptTechPenalty		-5	MIN -127 MAX +127 - REP
+#awards_trophies.NewTechAward				2000	0-4,000,000
+#awards_trophies.NewTechPoor				0	0-4,000,000
+#awards_trophies.ResearchBonus			5	MIN -127 MAX +127 reputation bonus
+#awards_trophies.ResearchPenalty			-6	MIN -127 MAX +127 reputation penalty
+
+--------------------- Competitor Information -----------------------
+
+| Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
+#computer[0].Playing 0
+#computer[1].Playing 0
+#computer[2].Playing 0
+#computer[3].Playing 0
+#computer[4].Playing 0
+#computer[5].Playing 0
+#computer[6].Playing 0
+#computer[7].Playing 0
+#computer[8].Playing 0
+#computer[9].Playing 0
+#computer[10].Playing 0
+#computer[11].Playing 0
+#computer[12].Playing 0 CORSIX
+#computer[13].Playing 0 ROUJIN
+#computer[14].Playing 0 EDVIN
